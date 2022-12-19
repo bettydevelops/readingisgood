@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @NoArgsConstructor
@@ -12,8 +14,15 @@ import org.springframework.data.annotation.Id;
 
 public class BookRequest {
 
+  @NotNull
   String name;
+  @NotNull
   String author;
+  @NotNull
+  @PositiveOrZero
   int stock;
+  @NotNull
+  @PositiveOrZero
+  double price;
 
 }

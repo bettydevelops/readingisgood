@@ -4,26 +4,41 @@ import com.example.ReadingIsGood.shared.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/book")
+@Validated
 public class BookController {
+
   private final BookService bookService;
 
-  public ResponseEntity<SuccessResponse> newBook(BookRequest bookRequest) {
-   BookResponse bookResponse = bookService.newBook(bookRequest);
-   SuccessResponse successResponse = new SuccessResponse(bookResponse, "New book created.");
-   return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
+  @PostMapping
+  public ResponseEntity<SuccessResponse> createNewBook(@Valid @RequestBody BookRequest bookRequest) {
+    BookResponse bookResponse = bookService.createNewBook(bookRequest);
+    SuccessResponse successResponse = new SuccessResponse(bookResponse, "New book created.");
+    return new ResponseEntity<>(successResponse, HttpStatus.CREATED);
   }
 
-  public ResponseEntity<SuccessResponse> updateBook(BookRequest bookRequest) {
-    //TODO discuss what parameters will be given to method
-    //return ResponseEntity.ok(bookService.updateBook(book));
-return null;
+  @PatchMapping(path = "/{id}")
+  public ResponseEntity<SuccessResponse> updateBookStock(@Valid @NotNull @PositiveOrZero @RequestParam(value = "newStockCount") Integer newStockCount,
+                                                         @Valid @NotNull @PathVariable Long id) {
+    bookService.updateBookStock(newStockCount, id);
+    SuccessResponse successResponse = new SuccessResponse(null, "Book stock updated.");
+    return new ResponseEntity<>(successResponse, HttpStatus.OK);
   }
 
-  }
+}
 

@@ -1,5 +1,6 @@
 package com.example.ReadingIsGood.customer;
 
+import com.example.ReadingIsGood.order.Order;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,17 +8,22 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(schema="BOOKSTORE", name="CUSTOMER")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Data
-public class CustomerModel {
+public class Customer {
 
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "ID")
   Long id;
 
@@ -29,7 +35,9 @@ public class CustomerModel {
 
   @Column(name = "ADDRESS")
   String address;
+
+  @OneToMany(mappedBy = "customer")
+  Set<Order> orderSet;
 }
 
-//TODO connect order table with customer
 

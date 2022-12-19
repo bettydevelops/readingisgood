@@ -1,32 +1,38 @@
 package com.example.ReadingIsGood.book;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.List;
+
 @Service
-public class BookServiceImpl implements BookService{
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional
+public class BookServiceImpl implements BookService {
 
   BookRepository bookRepository;
+  BookMapper bookMapper;
+
+
   @Override
-  public BookResponse newBook(BookRequest bookRequest) {
+  public BookResponse createNewBook(BookRequest bookRequest) {
 
-    BookModel book = new BookModel();
-    book.setName(bookRequest.getName());
-    book.setAuthor(bookRequest.getAuthor());
-    book.setStock(bookRequest.getStock());
-
+    Book book = bookMapper.map(bookRequest);
     bookRepository.save(book);
-    BookResponse bookResponse = new BookResponse();
-    bookResponse.setId(book.getId());
-    bookResponse.setName(book.getName());
-    bookResponse.setAuthor(book.getAuthor());
-    bookResponse.setStock(book.getStock());
-
-    return bookResponse;
+    return bookMapper.map(book);
   }
 
   @Override
-  public void updateBookStock(BookRequest bookRequest) {
+  public void updateBookStock(int newStockCount, Long id) {
+    bookRepository.updateBookStockById(newStockCount, id);
+  }
 
+  public List<Book> findAllByIdIn(List<Long> idList) {
+    return bookRepository.findAllById(idList);
   }
 
 }

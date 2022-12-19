@@ -1,4 +1,4 @@
-package com.example.ReadingIsGood.book;
+package com.example.ReadingIsGood.statistics;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -8,13 +8,10 @@ import lombok.experimental.FieldDefaults;
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+public class StatisticsResponse {
 
-public class BookResponse {
-
-  Long id;
-  String name;
-  String author;
-  int stock;
-  double price;
+  int totalOrderCount;
+  int totalBookCount;
+  double totalPurchasedAmount;
 
 }

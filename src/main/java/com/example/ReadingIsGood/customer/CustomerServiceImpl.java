@@ -1,27 +1,40 @@
 package com.example.ReadingIsGood.customer;
 
+import com.example.ReadingIsGood.order.Order;
+import com.example.ReadingIsGood.order.OrderMapper;
+import com.example.ReadingIsGood.order.OrderResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CustomerServiceImpl implements CustomerService{
-  private final CustomerRepository customerRepository;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Set;
 
-  public CustomerServiceImpl(CustomerRepository customerRepository) {
-    this.customerRepository = customerRepository;
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class CustomerServiceImpl implements CustomerService{
+
+  private final CustomerRepository customerRepository;
+  private final OrderMapper orderMapper;
+  private final CustomerMapper customerMapper;
+
+
+  public CustomerResponse createNewCustomer(CustomerRequest customerRequest) {
+
+    Customer customer = customerMapper.map(customerRequest);
+    customerRepository.save(customer);
+    return customerMapper.map(customer);
   }
 
-  public CustomerResponse newCustomer(CustomerRequest customerRequest) {
+  public List<OrderResponse> getAllOrdersOfCustomer(Long id) {
+    Customer customer = findById(id);
+    Set<Order> orderSet = customer.getOrderSet();
+    return orderMapper.map(orderSet);
+  }
 
-    CustomerModel customer = new CustomerModel();
-    customer.setFirstName(customerRequest.getFirstName());
-    customer.setLastName(customerRequest.getLastName());
-    customer.setAddress(customerRequest.getAddress());
-
-    customerRepository.save(customer);
-    CustomerResponse customerResponse = new CustomerResponse();
-    customerResponse.setFirstName(customer.getFirstName());
-    customerResponse.setLastName(customer.getLastName());
-    customerResponse.setAddress(customer.getAddress());
-    return customerResponse;
+  public Customer findById(Long id) {
+    return customerRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Customer with id: " + id + " is not found."));
   }
 }

@@ -1,10 +1,12 @@
 package com.example.ReadingIsGood.customer;
 
+import com.example.ReadingIsGood.order.Order;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class CustomerResponse {
   String firstName;
   String lastName;
   String address;
-  //TODO List<Order> orders;
+  Set<Order> orderSet;
 
 }
 
