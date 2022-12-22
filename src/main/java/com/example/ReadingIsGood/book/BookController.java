@@ -33,7 +33,7 @@ public class BookController {
   }
 
   @PatchMapping(path = "/{id}")
-  public ResponseEntity<SuccessResponse> updateBookStock(@Valid @NotNull @PositiveOrZero @RequestParam(value = "newStockCount") Integer newStockCount,
+  public ResponseEntity<SuccessResponse> updateBookStock(@Valid @NotNull @PositiveOrZero @RequestParam Integer newStockCount,
                                                          @Valid @NotNull @PathVariable Long id) {
     bookService.updateBookStock(newStockCount, id);
     SuccessResponse successResponse = new SuccessResponse(null, "Book stock updated.");
